@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Магазини Полтавської області</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+
+<h1>Магазини Полтавської області</h1>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  const map = L.map('map').setView([49.588, 34.551], 9);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  fetch('data.json')
+    .then(r => r.json())
+    .then(shops => {
+      shops.forEach(shop => {
+        if (shop.lat && shop.lng) {
+          L.marker([shop.lat, shop.lng])
+            .addTo(map)
+            .bindPopup(`<b>${shop.name}</b><br>${shop.address}<br>${shop.category}`);
+        }
+      });
+    });
+</script>
+
+</body>
+</html>
